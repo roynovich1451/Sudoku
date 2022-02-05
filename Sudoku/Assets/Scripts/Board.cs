@@ -2,10 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Board : MonoBehaviour
+public class Board
 {
-    private const int SIZE = 9;
-    private Square[,] _board = new Square[SIZE, SIZE];
+    public const int SIZE = 9;
+    public const int GROUP_SIZE = 3;
+
+    private Square[,] _gameBoard;
+    public Square[,] GameBoard
+    {
+        get
+        {
+            return _gameBoard;
+        }
+        set
+        {
+            _gameBoard = value;
+        }
+    }
+
+    public Board() 
+    {
+        _gameBoard = new Square[SIZE, SIZE];
+        newEmptyBoard(0);
+    }
+
+    public Board(Square[,] brd)
+    {
+        GameBoard = brd;
+    }
 
     private bool isValidIndex(int i)
     {
@@ -17,13 +41,13 @@ public class Board : MonoBehaviour
         return (row / 3 * 3) + (col / 3);
     }
 
-    private void setSquaresLocations()
+    private void newEmptyBoard(int val)
     {
         for (int i = 0; i < SIZE; i++)
         {
             for (int j = 0; j < SIZE; j++)
             {
-                _board[i, j] = new Square(1, i, j, getGroup(i, j));
+                GameBoard[i, j] = new Square(val, i, j, getGroup(i, j));
             }
         }
     }
@@ -31,10 +55,10 @@ public class Board : MonoBehaviour
     public void clearBaord()
     {
         for (int i = 0; i < SIZE; i++)
-        {
+       {
             for (int j = 0; j < SIZE; j++)
             {
-                _board[i, j].Value = 0;
+                GameBoard[i, j].Value = 0;
             }
         }
     }
@@ -55,7 +79,7 @@ public class Board : MonoBehaviour
                 {
                     brd += "| ";
                 }
-                brd += $"{_board[i, j].Value} :";  
+                brd += $"{GameBoard[i, j].Value} ";  
             }
             brd += '\n';
         }
@@ -64,23 +88,12 @@ public class Board : MonoBehaviour
 
     public void setSqaureAt(int row, int col, int val)
     {
-        if (!isValidIndex(row) || !isValidIndex(col) || !isValidIndex(val))
+        if (!isValidIndex(row) || !isValidIndex(col))
         {
-            UnityEngine.Debug.Log($"Invalid index found! {row} {col} {val}");
+            UnityEngine.Debug.Log($"Invalid index found! {{{row}, {col}}}");
             return;
         }
-        _board[row, col].Value = val;
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        setSquaresLocations();
-        printBoard();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (SudokuRules.)
+        GameBoard[row, col].Value = val;
     }
 }
