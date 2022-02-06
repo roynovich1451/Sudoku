@@ -83,7 +83,7 @@ public class Square
         this.Row = row;
         this.Column = column;
         this.Group = group;
-        UnityEngine.Debug.Log(string.Format("Hello, I am Square, my value is {0} at index ({1}, {2}), group {3}", Value, Row, Column, Group));
+        //UnityEngine.Debug.Log(string.Format("Hello, I am Square, my value is {0} at index ({1}, {2}), group {3}", Value, Row, Column, Group));
     }
 
     public void ToString()

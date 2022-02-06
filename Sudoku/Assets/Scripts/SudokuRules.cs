@@ -8,51 +8,49 @@ static class SudokuRules
     public const int ROW = 0;
     public const int COL = 1;
 
-    public static bool checkUniqueness(Square brd, int row, int col, int val, bool is_row)
+    public static bool checkUniqueness(Board brd, int row, int col, int val, bool is_row)
     {
         for (int i = 0; i < SIZE; i++)
         {
             if (is_row)
             {
-                if (brd.Value == val)
-                    return false;
-            } 
-            else
-            {
-                if (brd.Value == val)
+                if (brd.GameBoard[row, i].Value == val)
                     return false;
             }
-            
+            else
+            {
+                if (brd.GameBoard[i, col].Value == val)
+                    return false;
+            }
+
         }
         return true;
     }
 
-    public static bool checkGroupUniqueness(Square[,] arr, int group, int val)
+    private static int[] getStartIndexes(int row, int col)
     {
-        int[] indexes = getStartIndexes(group);
-        UnityEngine.Debug.Log($"Checking indexes: {{{indexes[ROW]}, {indexes[COL]}}}");
-        for (int i = indexes[ROW]; i < Board.GROUP_SIZE && i < Board.SIZE; i++)
+        return new int[]
         {
-            for (int j = indexes[COL]; i < Board.GROUP_SIZE && j < Board.SIZE; j++)
+            row - row % Board.GROUP_SIZE,
+            col - col % Board.GROUP_SIZE
+        };
+    }
+
+    public static bool checkGroupUniqueness(Board brd, int row, int col, int val)
+    {
+        int[] indexes = getStartIndexes(row, col);
+        //UnityEngine.Debug.Log($"Checking indexes: {{{indexes[ROW]}, {indexes[COL]}}}");
+        for (int i = indexes[ROW]; i < Board.GROUP_SIZE; i++)
+        {
+            for (int j = indexes[COL]; j < Board.GROUP_SIZE; j++)
             {
-                UnityEngine.Debug.Log($"Checking indexes: {{{i}, {j}}}");
-                if (arr[i, j].Value == val)
+                if (brd.GameBoard[i, j].Value == val)
                 {
-                    UnityEngine.Debug.Log($"Invalid {val} is not uniqe: {{{i}, {j}}}");
                     return false;
                 }
             }
         }
         return true;
-    }
-
-    private static int[] getStartIndexes(int group)
-    {
-        return new int[] 
-        {
-            group / Board.GROUP_SIZE * Board.GROUP_SIZE,
-            group % Board.GROUP_SIZE * Board.GROUP_SIZE
-        };
     }
 
     public static void printArray(Square[] arr)
@@ -63,5 +61,41 @@ static class SudokuRules
             pArr += arr[i].Value;
         }
         UnityEngine.Debug.Log(pArr);
+    }
+
+    public static bool isLegalAssignment(Board brd, int row, int col, int num)
+    {
+        return SudokuRules.checkGroupUniqueness(brd, row, col, num) &&
+            SudokuRules.checkUniqueness(brd, row, col, num, true) &&
+            SudokuRules.checkUniqueness(brd, row, col, num, false);
+    }
+
+    public static bool solveSudoku(Board brd, int row, int col)
+    {
+        UnityEngine.Debug.Log($"solve index {{{row}, {col}}}");
+
+        if (row == Board.SIZE - 1 && col == Board.SIZE)
+            return true;
+
+        if (col == Board.SIZE)
+        {
+            col = 0;
+            row++;
+        }
+
+        if (brd.GameBoard[row, col].Value > 0)
+            return solveSudoku(brd, row, col + 1);
+
+        for (int num = 1; num <= Board.SIZE; num++)
+        {
+            if (SudokuRules.isLegalAssignment(brd, row, col, num))
+            {
+                brd.GameBoard[row, col].Value = num;
+                if (solveSudoku(brd, row, col + 1))
+                    return true;
+            }
+            brd.GameBoard[row, col].Value = 0;
+        }
+        return false;
     }
 }

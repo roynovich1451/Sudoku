@@ -26,14 +26,34 @@ public class Board
         newEmptyBoard(0);
     }
 
-    public Board(Square[,] brd)
+    public Board(int[,] data)
     {
-        GameBoard = brd;
+        _gameBoard = new Square[SIZE, SIZE];
+        intToBoard(data);
+    }
+
+    private bool verifySizes(int[,] data)
+    {
+        return true;
+    }
+
+    private void intToBoard(int[,] data)
+    {
+        if (verifySizes(data))
+        {
+            for (int i = 0; i < SIZE; i++)
+            {
+                for (int j = 0; j < SIZE; j++)
+                {
+                    GameBoard[i, j] = new Square(data[i, j], i, j, getGroup(i, j));
+                }
+            }
+        }
     }
 
     private bool isValidIndex(int i)
     {
-        return ((i < SIZE) && (i >= 0));
+        return ((i <= SIZE) && (i > 0));
     }
 
     private int getGroup(int row, int col)
@@ -93,7 +113,11 @@ public class Board
             UnityEngine.Debug.Log($"Invalid index found! {{{row}, {col}}}");
             return;
         }
-        if (SudokuRules.)
         GameBoard[row, col].Value = val;
+    }
+
+    public void solveBoard()
+    {
+        SudokuRules.solveSudoku(this, 0, 0);
     }
 }
