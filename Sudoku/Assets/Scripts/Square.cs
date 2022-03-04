@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,8 +15,7 @@ public class Square
         {
             if (value < 0 || value > Board.SIZE + 1)
             {
-                UnityEngine.Debug.Log($"Invalid value {value}, Do nothing.");
-                return;
+                throw new ArgumentException($"Invalid value {value}, Do nothing.");
             }
             _value = value;
         } 
@@ -32,8 +32,7 @@ public class Square
         {
             if (value < 0 || value > Board.SIZE)
             {
-                UnityEngine.Debug.Log($"Invalid row index {value}, Do nothing.");
-                return;
+                throw new ArgumentException($"Invalid row index {value}, Do nothing.");
             }
             _row = value;
         }
@@ -86,8 +85,9 @@ public class Square
         //UnityEngine.Debug.Log(string.Format("Hello, I am Square, my value is {0} at index ({1}, {2}), group {3}", Value, Row, Column, Group));
     }
 
-    public void ToString()
+    override
+    public string ToString()
     {
-        UnityEngine.Debug.Log(string.Format("Hello, I am Square, my value is {0} at index ({1}, {2}), group {3}", Value, Row, Column, Group));
+        return $"({Row}, {Column}) = {Value}";
     }
 }

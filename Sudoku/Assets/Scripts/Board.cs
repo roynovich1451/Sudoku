@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +21,7 @@ public class Board
         }
     }
 
-    public Board() 
+    public Board()
     {
         _gameBoard = new Square[SIZE, SIZE];
         newEmptyBoard(0);
@@ -30,6 +31,26 @@ public class Board
     {
         _gameBoard = new Square[SIZE, SIZE];
         intToBoard(data);
+    }
+
+    public Board DeepCopy()
+    {
+        Board other = (Board)this.MemberwiseClone();
+        other.GameBoard = this.CopyBoard();
+        return other;
+    }
+
+    private Square[,] CopyBoard()
+    {
+        Square[,] newBrd = new Square[SIZE, SIZE];
+        for (int i = 0; i < SIZE; i++)
+        {
+            for (int j = 0; j < SIZE; j++)
+            {
+                newBrd[i, j] = new Square(GameBoard[i, j].Value, i, j, getGroup(i, j));
+            }
+        }
+        return newBrd;
     }
 
     private bool verifySizes(int[,] data)
@@ -75,7 +96,7 @@ public class Board
     public void clearBaord()
     {
         for (int i = 0; i < SIZE; i++)
-       {
+        {
             for (int j = 0; j < SIZE; j++)
             {
                 GameBoard[i, j].Value = 0;
@@ -99,7 +120,7 @@ public class Board
                 {
                     brd += "| ";
                 }
-                brd += $"{GameBoard[i, j].Value} ";  
+                brd += $"{GameBoard[i, j].Value} ";
             }
             brd += '\n';
         }
@@ -116,8 +137,26 @@ public class Board
         GameBoard[row, col].Value = val;
     }
 
-    public void solveBoard()
+    public void SolveBoard()
     {
         SudokuRules.solveSudoku(this, 0, 0);
+    }
+
+    public bool Equal(Board b)
+    {
+        for (int i = 0; i < SIZE; i++)
+        {
+            for (int j = 0; j < SIZE; j++)
+            {
+                if (this.GameBoard[i, j].Value != b.GameBoard[i, j].Value)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public int GetValueFrom(int row, int col)
+    {
+        return GameBoard[row, col].Value;
     }
 }

@@ -72,7 +72,7 @@ static class SudokuRules
 
     public static bool solveSudoku(Board brd, int row, int col)
     {
-        UnityEngine.Debug.Log($"solve index {{{row}, {col}}}");
+        //UnityEngine.Debug.Log($"solve index {{{row}, {col}}}");
 
         if (row == Board.SIZE - 1 && col == Board.SIZE)
             return true;
