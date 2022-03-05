@@ -4,67 +4,77 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using Roy.Sudoku.Model;
 
-public class UI_square : MonoBehaviour
+namespace Roy.Sudoku.View
 {
-    private Game _gameScript;
-    private TMP_InputField input;
-    private string objName;
-    private int Row { get; set; }
-    private int Col { get; set; }
-    private String currentval;
-
-    // Start is called before the first frame update
-    void Start()
+    public class UI_square : MonoBehaviour
     {
-        AttachObjects();
-        objName = input.name;
-        input.onValueChanged.AddListener(delegate { ValueChange(); });
-        Row = Int32.Parse(objName[1].ToString());
-        Col = Int32.Parse(objName[2].ToString());
-        input.text = " ";
-    }
+        //TODO: private Game _gameScript;
+        private TMP_InputField input;
+        private string objName;
+        private int Row { get; set; }
+        private int Col { get; set; }
+        private String currentval;
 
-    private void ValueChange()
-    {
-        input.text = input.text.Trim();
-        currentval = _gameScript.GetValue(Row, Col);
-        try
+        private SquareModel _squareModel;
+
+        // Start is called before the first frame update
+        void Start()
         {
-            _gameScript.UpdateMove(input.text, Row, Col);
-            currentval = input.text;
-        }
-        catch (ArgumentException ex)
-        {
-            Debug.Log($"EXCEPTION: {ex.Message}");
-            input.text = currentval;
-        }
-    }
-
-    private void AttachObjects()
-    {
-        _gameScript = GameObject.Find("Module").GetComponent<Game>();
-        input = transform.gameObject.GetComponent<TMP_InputField>();
-    }
-
-    public void DisplayFromBoard(Board brd)
-    {
-        Image img = this.transform.GetComponent<Image>();
-
-        int val = brd.GetValueFrom(Row, Col);
-        if (val != 0)
-            input.text = val.ToString();
-        else
+            AttachObjects();
+            objName = input.name;
+            input.onValueChanged.AddListener(delegate { ValueChange(); });
+            Row = Int32.Parse(objName[1].ToString());
+            Col = Int32.Parse(objName[2].ToString());
             input.text = " ";
-        img.color = new Color32(255, 255, 255, 255);
-    }
+        }
+        public void Initialize(SquareModel squareModel)
+        {
+            _squareModel = squareModel;
+        }
 
-    public void Display(int val, bool isHint)
-    {
-        Image img = this.transform.GetComponent<Image>();
-        
-        input.text = val.ToString();
-        if (isHint)
-            img.color = new Color32(248, 240, 0, 255);
+        private void ValueChange()
+        {
+            input.text = input.text.Trim();
+            //TODO: currentval = _gameScript.GetValue(Row, Col);
+            try
+            {
+                //TODO: _gameScript.UpdateMove(input.text, Row, Col);
+                currentval = input.text;
+            }
+            catch (ArgumentException ex)
+            {
+                Debug.Log($"EXCEPTION: {ex.Message}");
+                input.text = currentval;
+            }
+        }
+
+        private void AttachObjects()
+        {
+            //TODO: _gameScript = GameObject.Find("Module").GetComponent<Game>();
+            input = transform.gameObject.GetComponent<TMP_InputField>();
+        }
+
+        public void DisplayFromBoard(Board brd)
+        {
+            Image img = this.transform.GetComponent<Image>();
+
+            int val = brd.GetValueFrom(Row, Col);
+            if (val != 0)
+                input.text = val.ToString();
+            else
+                input.text = " ";
+            img.color = new Color32(255, 255, 255, 255);
+        }
+
+        public void Display(int val, bool isHint)
+        {
+            Image img = this.transform.GetComponent<Image>();
+
+            input.text = val.ToString();
+            if (isHint)
+                img.color = new Color32(248, 240, 0, 255);
+        }
     }
 }
