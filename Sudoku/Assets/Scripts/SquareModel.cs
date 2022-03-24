@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Roy.Sudoku.Common;
 
 namespace Roy.Sudoku.Model
 {
@@ -16,7 +14,7 @@ namespace Roy.Sudoku.Model
             }
             set
             {
-                if (value < 0 || value > Board.SIZE + 1)
+                if (value < Validation.ValidInputLow || value > Validation.ValidInputHigh)
                 {
                     throw new ArgumentException($"Invalid value {value}, Do nothing.");
                 }
@@ -33,7 +31,7 @@ namespace Roy.Sudoku.Model
             }
             set
             {
-                if (value < 0 || value > Board.SIZE)
+                if (value < 0 || value > Size.BoardSize)
                 {
                     throw new ArgumentException($"Invalid row index {value}, Do nothing.");
                 }
@@ -50,7 +48,7 @@ namespace Roy.Sudoku.Model
             }
             set
             {
-                if (value < 0 || value > Board.SIZE)
+                if (value < 0 || value > Size.BoardSize)
                 {
                     UnityEngine.Debug.Log($"Invalid column index {value}, Do nothing.");
                     return;
@@ -59,39 +57,24 @@ namespace Roy.Sudoku.Model
             }
         }
 
-        private int _group;
-        public int Group
+        public void ClearSquareData()
         {
-            get
-            {
-                return _group;
-            }
-            set
-            {
-                if (value < 0 || value > Board.SIZE)
-                {
-                    UnityEngine.Debug.Log($"Invalid group {value}, Do nothing.");
-                    return;
-                }
-                _group = value;
-            }
+            Value = 0;
         }
 
         public SquareModel() { }
 
-        public SquareModel(int value, int row, int column, int group)
+        public SquareModel(int value, int row, int column)
         {
             this.Value = value;
             this.Row = row;
             this.Column = column;
-            this.Group = group;
-            //UnityEngine.Debug.Log(string.Format("Hello, I am Square, my value is {0} at index ({1}, {2}), group {3}", Value, Row, Column, Group));
         }
 
         override
         public string ToString()
         {
-            return $"({Row}, {Column}) = {Value}";
+            return $"{Value.ToString()} at ({Row}, {Column})";
         }
     }
 }
