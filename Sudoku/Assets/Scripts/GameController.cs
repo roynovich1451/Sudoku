@@ -1,10 +1,12 @@
 
 using UnityEngine;
+using UnityEngine.UI;
 using Random = System.Random;
 using Roy.Sudoku.Model;
 using Roy.Sudoku.View;
 using Roy.Sudoku.Static;
 using Roy.Sudoku.Common;
+using System;
 
 namespace Roy.Sudoku.Controllers
 {
@@ -17,19 +19,46 @@ namespace Roy.Sudoku.Controllers
         private string ID;
         [SerializeField] private int availableHints = 5;
 
+        /*
+        public delegate void SquareValueChangedEventHandler(object source, Event args);
+
+        public event SquareValueChangedEventHandler SquareValueChanged;
+        
+        protected virtual void OnSquareValueChanged()
+        {
+            if (SquareValueChanged != null)
+                SquareValueChanged(this, Event.current);
+        }
+        */
+        public delegate void MenuButtonClickEventHandler(object source, Event e);
+
+        public event MenuButtonClickEventHandler MenuButtonClicked;
+        protected virtual void OnMenuButtonClick()
+        {
+            System.Console.WriteLine($"OnMenuButtonClick just clicked");
+            /*
+            if (MenuButtonClicked != null)
+                MenuButtonClicked(this, Event.current);
+            */
+        }
+
         void Start()
         {
+            /*
             ID = Generators.GenerateRandomStringWithLength(Defines.IdLength);
             CreateGameModels();
             AttachGameViews();
             InitializeGame(_currentBoard);
+            */
+
+            AttachGameViews();
+            _menu.Initialize(StartNewGame, getHint);
         }
 
         public void StartNewGame()
         {
             ID = Generators.GenerateRandomStringWithLength(Defines.IdLength);
             CreateGameModels();
-            AttachGameViews();
             InitializeGame(_currentBoard);
         }
 
@@ -62,6 +91,31 @@ namespace Roy.Sudoku.Controllers
         public void InitializeGame(BoardModel brd)
         {
             _boardView.Initialize(brd);
+        }
+
+        private void getHint()
+        {
+            /* TODO: Deal which displaying the hint
+            int i, j, hint;
+            Random r = new Random();
+
+            if (availableHints == 0)
+            {
+                Debug.Log($"No more hints available!");
+                return;
+            }
+
+            do
+            {
+                i = r.Next(0, Size.BoardSize);
+                j = r.Next(0, Size.BoardSize);
+            } while (_currentBoard.GetSquareDataByIndex(i, j) != 0);
+            hint = _solution.GetSquareDataByIndex(i, j);
+            _currentBoard.SetSqaureDataByIndex(hint, i, j);
+
+            availableHints--;
+            Debug.Log($"{availableHints} hints still available!");
+            */
         }
 
         /*

@@ -8,28 +8,45 @@ public class MenuView : MonoBehaviour
     [SerializeField]
     private Button hintButton;
 
+    public delegate void NewGameButtonClickedEventHandler();
+
+    public event NewGameButtonClickedEventHandler NewGameButtonClicked;
+    
+
+    public delegate void HintButtonClickedEventHandler();
+
+    public event HintButtonClickedEventHandler HintButtonClicked;
+  
     // Start is called before the first frame update
     void Start()
     {
-        //TODO: OPEN AttachObjects();
+        AddListeners();
     }
 
-    private void AttachObjects()
+    public void Initialize(NewGameButtonClickedEventHandler newGameHandler, HintButtonClickedEventHandler hintHandler)
     {
-        newButton.onClick.AddListener(delegate { NewGame(); });
-        hintButton.onClick.AddListener(delegate { GetHint(); });
-        //_gameScript = GameObject.Find("Module").GetComponent<GameController>();
+        NewGameButtonClicked += newGameHandler;
+        HintButtonClicked += hintHandler;
     }
 
-    public void NewGame()
+    private void AddListeners()
     {
-        Debug.Log($"Player want to start new game!");
-        //_gameScript.StartNewGame();
+        newButton.onClick.AddListener(delegate { NewGameButtonClicked(); });
+        hintButton.onClick.AddListener(delegate { HintButtonClicked(); });
+    }
+    /*
+    protected virtual void OnNewGameButtonClicked()
+    {
+        System.Console.WriteLine($"OnMenuButtonClick just clicked");
+        if (NewGameButtonClicked != null)
+            NewGameButtonClicked();
     }
 
-    public void GetHint()
+    protected virtual void OnHintButtonClicked()
     {
-        Debug.Log($"Player want to get a hint!");
-        //_gameScript.HintPlease();
+        System.Console.WriteLine($"OnMenuButtonClick just clicked");
+        if (HintButtonClicked != null)
+            HintButtonClicked();
     }
+    */
 }
