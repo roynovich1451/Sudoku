@@ -26,6 +26,15 @@
 # Visual Studio cache directory
 .vs/
 
+# Unity Cached
+*Cache*
+
+# Unity Artifacts
+*Artifacts*
+
+# Unity Logs
+*Logs*
+
 # Gradle cache directory
 .gradle/
 
